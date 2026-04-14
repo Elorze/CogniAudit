@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "src"))
 
 from cogniaudit.core import CogniAuditEngine
+from cogniaudit.demo_offline import build_offline_demo_bundle
 from cogniaudit.gemini_client import FakeGeminiClient, GeminiClient
 from cogniaudit.models import ChatMessage
 from cogniaudit.settings import load_settings
@@ -40,23 +41,60 @@ def _init_state() -> None:
         st.session_state.next_user_index = 0
     if "audit_history" not in st.session_state:
         st.session_state.audit_history = []
+    if "offline_demo" not in st.session_state:
+        st.session_state.offline_demo = False
     if "engine" not in st.session_state:
         st.session_state.engine = _get_engine()
+
+
+def _apply_offline_bundle() -> None:
+    b = build_offline_demo_bundle()
+    st.session_state.messages = b.messages
+    st.session_state.next_user_index = b.next_user_index
+    st.session_state.audit_history = b.audit_history
+    st.session_state.offline_demo = True
+    st.session_state.engine.reset()
+
+
+def _maybe_autoload_demo_on_first_run() -> None:
+    if st.session_state.get("_demo_autoload_done"):
+        return
+    q = st.query_params.get("demo")
+    env_on = os.getenv("COGNIAUDIT_AUTOLOAD_DEMO", "").lower() in {"1", "true", "yes"}
+    if env_on or q == "1":
+        _apply_offline_bundle()
+    st.session_state._demo_autoload_done = True
 
 
 def main() -> None:
     st.set_page_config(page_title="CogniAudit Demo", layout="centered")
     _init_state()
+    _maybe_autoload_demo_on_first_run()
 
     st.title("CogniAudit Demo")
     st.caption("Streamlit + Gemini + ADWIN（静默监测 / 漂移触发微审计 / 线性认知路径）")
 
+    if st.session_state.offline_demo:
+        st.success(
+            "当前为 **离线演示剧本**（侧栏可查看预置认知路径）。"
+            "继续输入将按普通模式走监测逻辑，与剧本无关；录屏建议先 **Reset** 或新开无痕窗口。"
+        )
+
     with st.sidebar:
         st.subheader("控制台")
+        st.caption(
+            "**路演/录屏推荐**：使用「一键加载离线剧本」——零 API、确定性亮灯。"
+            " URL 追加 `?demo=1` 或设置环境变量 `COGNIAUDIT_AUTOLOAD_DEMO=1` 可在打开页面时自动加载。"
+        )
+        if st.button("一键加载离线演示剧本（零 API）", type="secondary"):
+            _apply_offline_bundle()
+            st.rerun()
+
         if st.button("归零 Reset", type="primary"):
             st.session_state.messages = []
             st.session_state.audit_history = []
             st.session_state.next_user_index = 0
+            st.session_state.offline_demo = False
             st.session_state.engine.reset()
             st.rerun()
 
@@ -76,7 +114,7 @@ def main() -> None:
                         st.code(q)
                 st.divider()
         else:
-            st.info("暂无漂移记录。继续对话，系统会在后台静默监测。")
+            st.info("暂无漂移记录。可加载离线剧本，或继续对话并由后台监测。")
 
     for m in st.session_state.messages:
         with st.chat_message(m.role):

@@ -36,3 +36,11 @@ COGNIAUDIT_USE_FAKE=1 PYTHONPATH=src python scripts/selfcheck.py
 - `pytest` 与 `selfcheck` 默认走 **Fake 模式**（不消耗 API 额度）。
 - 若你在某些受限沙盒环境里运行 Python，可能会遇到 `numpy` 导入异常；在本机终端正常运行一般没问题。
 
+### 路演 / 录屏：离线确定性剧本（推荐）
+
+- 启动后点击侧栏 **「一键加载离线演示剧本（零 API）」**，会预填一段基于 `对话.md` 精简的「用户↔助手」对话，并在侧栏写入 **固定的两条认知路径节点**（每次完全一致，不调用大模型）。
+- 打开页面自动加载（可选其一）：
+  - 浏览器访问：`http://localhost:8501/?demo=1`
+  - 或环境变量：`COGNIAUDIT_AUTOLOAD_DEMO=1`
+- 叙事说明见仓库内 `对话_精简.md`；剧本数据在 `src/cogniaudit/demo_offline.py`。
+
