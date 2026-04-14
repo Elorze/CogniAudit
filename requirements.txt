@@ -1,0 +1,9 @@
+streamlit==1.50.0
+python-dotenv==1.2.1
+numpy==1.24.4
+scipy==1.11.4
+pandas==2.1.4
+river==0.21.1
+google-generativeai==0.8.6
+pydantic==2.13.0
+pytest==8.4.2
