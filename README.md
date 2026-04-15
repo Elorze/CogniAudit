@@ -59,3 +59,9 @@ CogniAudit 关注的是：**在这段关系里，你正在变成谁**。  
 
 我和 AI 的每一次对话，本质上都是它参与我生命的过程，也在推动我的认知发生变化。  
 我相信，人与 AI 之间，确实可以生长出一种温情。
+
+## demo演示
+<img width="1066" height="963" alt="截屏2026-04-15 09 36 00" src="https://github.com/user-attachments/assets/d11c28a0-ec67-4283-8de2-1ccf1f48a4e7" />
+<img width="1063" height="915" alt="截屏2026-04-15 09 35 52" src="https://github.com/user-attachments/assets/ce6ef80e-0376-4932-a485-8162c3600c1a" />
+<img width="989" height="915" alt="截屏2026-04-15 09 35 42" src="https://github.com/user-attachments/assets/61eb834b-8b49-4887-8666-8dee17f6bd64" />
+
