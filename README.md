@@ -1,14 +1,10 @@
-## CogniAudit Demo
+## CogniAudit
 
-本目录是 `CogniAudit` 的最小可运行 Demo（Streamlit + Gemini + ADWIN）。
+非侵入式人机对话认知漂移监测 Demo：**语义嵌入 + River ADWIN + 轻量微审计**，Streamlit 前端，Gemini API（见 `核心.md` 规约）。
 
 ### 运行
 
-1. 准备环境变量
-
-- 在本目录下放置 `.env`：
-  - `GEMINI_API_KEY=...`
-- 你也可以参考 `.env.example`（不要把真实 Key 写进仓库/聊天里）。
+1. 复制 `.env.example` 为 `.env`，填入 `GEMINI_API_KEY`（勿提交 `.env`）。
 
 2. 安装依赖
 
@@ -24,23 +20,8 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-### 测试
+可选：无 Key 时用 Fake 嵌入/回复做本地冒烟：`COGNIAUDIT_USE_FAKE=1 streamlit run app.py`。
 
-```bash
-pytest -q
-COGNIAUDIT_USE_FAKE=1 PYTHONPATH=src python scripts/selfcheck.py
-```
+### 技术栈
 
-说明：
-
-- `pytest` 与 `selfcheck` 默认走 **Fake 模式**（不消耗 API 额度）。
-- 若你在某些受限沙盒环境里运行 Python，可能会遇到 `numpy` 导入异常；在本机终端正常运行一般没问题。
-
-### 路演 / 录屏：离线确定性剧本（推荐）
-
-- 启动后点击侧栏 **「一键加载离线演示剧本（零 API）」**，会预填一段基于 `对话.md` 精简的「用户↔助手」对话，并在侧栏写入 **固定的两条认知路径节点**（每次完全一致，不调用大模型）。
-- 打开页面自动加载（可选其一）：
-  - 浏览器访问：`http://localhost:8501/?demo=1`
-  - 或环境变量：`COGNIAUDIT_AUTOLOAD_DEMO=1`
-- 叙事说明见仓库内 `对话_精简.md`；剧本数据在 `src/cogniaudit/demo_offline.py`。
-
+Python 3.10+、`google-generativeai`、`river`、`streamlit`、`pydantic`、`numpy` 等（见 `requirements.txt`）。
